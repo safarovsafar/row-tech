@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import Header from "../../enteties/header/header";
 import { motion } from "framer-motion"
+import { saveToken } from "../../shared/utils/token";
 
 const Login = () => {
     const { t } = useTranslation();
@@ -23,9 +24,8 @@ const Login = () => {
             const res = await axios.post(`https://row-sms.azurewebsites.net/Auth/login`, obj)
             console.log(res);
             if (res.status == 200) {
-                localStorage.setItem("access_token", res.data.accessToken)
-                localStorage.setItem("userName", name)
-                localStorage.getItem("access_token") ? navigate("/") : setError(true)
+                saveToken(res.data.accessToken)
+                navigate("/")
             }
 
         } catch (error) {

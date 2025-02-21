@@ -7,7 +7,6 @@ import Login from '../pages/login/login'
 import '../i18n'
 import Home from '../pages/home/home'
 
-let token = localStorage.getItem("access_token")
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

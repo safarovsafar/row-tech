@@ -1,9 +1,9 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { motion } from "framer-motion"
-import Modal from '../../shared/modal/modal';
-const url = `https://row-sms.azurewebsites.net/api/Messages/delete`
+import Modal from '../modal/modal';
+import { axiosRequest } from '../../shared/utils/axiosRequest';
+import { getToken } from '../../shared/utils/token';
 
 const Table = () => {
 
@@ -21,7 +21,7 @@ const Table = () => {
 
     const get = async () => {
         try {
-            const { data } = await axios.post(`https://row-sms.azurewebsites.net/api/Messages/search`, {
+            const { data } = await axiosRequest.post(`/api/Messages/search`, {
                 "filters": {
                     "sentAt": "2025-02-20T13:46:28.788Z",
                     "startDate": "2024-10-20T00:46:28.788Z",
@@ -35,12 +35,13 @@ const Table = () => {
                     "pageNumber": 1,
                     "pageSize": 100
                 }
-            }, { headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` } })
+            })
             setData(data.items)
             setResponse(data.items.slice(0, 8))
         } catch (error) {
         }
     }
+
 
     useEffect(() => {
         get()
@@ -48,9 +49,7 @@ const Table = () => {
 
     async function deletFunc(obj: any) {
         try {
-            await axios.post(url, obj, {
-                headers: { Authorization: `Bearer ${localStorage.getItem("access_token")}` }
-            })
+            await axiosRequest.post(`/api/Messages/delete`, obj,)
             get()
         } catch (error) {
             console.error(error);
@@ -66,12 +65,7 @@ const Table = () => {
         }
         console.log(obj);
         try {
-            await axios.post(`https://row-sms.azurewebsites.net/api/Messages/create`, obj, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("access_token")}`,
-                    "Content-Type": "application/json"
-                }
-            })
+            await axiosRequest.post(`/api/Messages/create`, obj)
             get()
         } catch (error) {
             console.error(error);
@@ -80,7 +74,7 @@ const Table = () => {
         e.target.reset()
     }
 
-    async function editFunc(e:any) {
+    async function editFunc(e: any) {
         e.preventDefault()
         const obj = {
             id: Number(idx),
@@ -88,7 +82,7 @@ const Table = () => {
             content: content
         }
         try {
-            await axios.post(`https://row-sms.azurewebsites.net/api/Messages/update`, obj, {
+            await axiosRequest.post(`/api/Messages/update`, obj, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem("access_token")}`,
                     "Content-Type": "application/json"
@@ -117,44 +111,46 @@ const Table = () => {
     }
 
     return (
-        <div style={{ boxShadow: "0.1px 0.1px 3px" }} className="mt-6 p-4 rounded-md">
-            <div className="flex px-[20px] justify-between items-center">
-                <p className='text-3xl font-semibold '>{t("text.10")}</p>
-                <button onClick={() => setAddModal(true)} className='bg-emerald-500 hover:bg-emerald-600 cursor-pointer p-1 px-4 text-white rounded-lg text-xl'>+Add</button>
+        <div style={{ boxShadow: "0.1px 0.1px 3px" }} className="mt-6 p-4 rounded-md w-full overflow-x-auto">
+            <div className="flex px-4 justify-between items-center flex-wrap">
+                <p className='text-2xl sm:text-3xl font-semibold'>{t("text.10")}</p>
+                <button onClick={() => setAddModal(true)} className='bg-emerald-500 hover:bg-emerald-600 cursor-pointer p-2 px-4 text-white rounded-lg text-lg sm:text-xl mt-2 sm:mt-0'>+Add</button>
             </div>
-            <table className='w-[950px] mt-4'>
-                <thead className='bg-emerald-400 text-xl hover:bg-emerald-500 text-white'>
-                    <tr className='p-4 border border-emerald-500'>
-                        <th className='p-2'>Id</th>
-                        <th className='p-2'>Content</th>
-                        <th className='p-2'>Organization</th>
-                        <th className='p-2'>Recipient</th>
-                        <th className='p-2'>Date</th>
-                        <th className='p-2'>Actions</th>
-                    </tr>
-                </thead>
-                <tbody className='text-xl'>
-                    {response.map((e: any, i: number) => {
-                        return <tr className='p-4 border-b border-black text-center' key={i}>
-                            <td className='p-2'>{e.id}</td>
-                            <td className='p-2'>{e.content}</td>
-                            <td className='p-2'>{e.organization.value}</td>
-                            <td className='p-2'>{e.recipient}</td>
-                            <td className='p-2'>{e.sentAt.substring(0, 10)}</td>
-                            <td className='p-2'><button onClick={() => {
-                                setChange(true)
-                                setIdx(e.id)
-                                setResip(e.recipient)
-                                setContent(e.content)
-                            }} className='cursor-pointer'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-settings-2"><path d="M20 7h-9" /><path d="M14 17H5" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg></button></td>
+            <div className="overflow-x-auto">
+                <table className='w-full min-w-[600px] mt-4'>
+                    <thead className='bg-emerald-400 text-lg sm:text-xl hover:bg-emerald-500 text-white'>
+                        <tr>
+                            <th className='p-2'>Id</th>
+                            <th className='p-2'>Content</th>
+                            <th className='p-2'>Organization</th>
+                            <th className='p-2'>Recipient</th>
+                            <th className='p-2'>Date</th>
+                            <th className='p-2'>Actions</th>
                         </tr>
-                    })}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody className='text-lg sm:text-xl'>
+                        {response.map((e: any, i: number) => (
+                            <tr className='p-4 border-b border-black text-center' key={i}>
+                                <td className='p-2'>{e.id}</td>
+                                <td className='p-2'>{e.content}</td>
+                                <td className='p-2'>{e.organization.value}</td>
+                                <td className='p-2'>{e.recipient}</td>
+                                <td className='p-2'>{e.sentAt.substring(0, 10)}</td>
+                                <td className='p-2'><button onClick={() => {
+                                    setChange(true);
+                                    setIdx(e.id);
+                                    setResip(e.recipient);
+                                    setContent(e.content);
+                                }} className='cursor-pointer'><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-settings-2"><path d="M20 7h-9" /><path d="M14 17H5" /><circle cx="17" cy="17" r="3" /><circle cx="7" cy="7" r="3" /></svg></button></td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
 
             <div className="mt-2 flex justify-center gap-4">
-                <button onClick={() => prevFunc()} className='font-bold cursor-pointer border rounded-lg p-2'><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg></button>
-                <button onClick={() => nextFunc()} className='font-bold cursor-pointer border rounded-lg p-2'><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" className="lucide lucide-arrow-right"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></button>
+                <button onClick={() => prevFunc()} className='font-bold cursor-pointer border rounded-lg p-2'><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-left"><path d="m12 19-7-7 7-7" /><path d="M19 12H5" /></svg></button>
+                <button onClick={() => nextFunc()} className='font-bold cursor-pointer border rounded-lg p-2'><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-arrow-right"><path d="M5 12h14" /><path d="m12 5 7 7-7 7" /></svg></button>
             </div>
 
             {change && <motion.div initial={{ opacity: 0, scale: 0.5 }}
@@ -179,7 +175,6 @@ const Table = () => {
                 </form>
             </Modal>
 
-
             <Modal isOpen={editModal} onClose={setEditModal}>
                 <form onSubmit={editFunc} className='text-black'>
                     <input value={recip} onChange={(e) => setResip(e.target.value)} name='recipient' className='block border rounded-lg border-black p-2 w-full h-[40px] mt-[17px]' type="text" placeholder='Recipient' />
@@ -188,6 +183,7 @@ const Table = () => {
                 </form>
             </Modal>
         </div>
+
     )
 }
 
