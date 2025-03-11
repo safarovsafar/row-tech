@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import { motion } from "framer-motion"
 import Modal from '../modal/modal';
-import { axiosRequest } from '../../shared/utils/axiosRequest';
+import { axiosRequest } from '../../shared/utils/axiosRequest'
 import { getToken } from '../../shared/utils/token';
+import { useNavigate } from 'react-router';
 
 const Table = () => {
 
@@ -18,8 +19,12 @@ const Table = () => {
     const [editModal, setEditModal] = useState<boolean>(false)
     const [idx, setIdx] = useState("")
     const { t } = useTranslation();
+    const navigate=useNavigate()
 
     const get = async () => {
+        if(localStorage.getItem("access_token") === null){
+           navigate("/login")
+        } 
         try {
             const { data } = await axiosRequest.post(`/api/Messages/search`, {
                 "filters": {
@@ -60,12 +65,15 @@ const Table = () => {
         e.preventDefault()
         const obj = {
             messageType: Number(e.target["message"].value),
-            recipient: e.target["recipient"].value,
-            content: e.target["content"].value
+            "items": [
+                {
+                    "recipient": e.target["recipient"].value,
+                    "content": e.target["content"].value
+                }
+            ]
         }
-        console.log(obj);
         try {
-            await axiosRequest.post(`/api/Messages/create`, obj)
+            await axiosRequest.post(`/api/Messages/listCreate`, obj)
             get()
         } catch (error) {
             console.error(error);
