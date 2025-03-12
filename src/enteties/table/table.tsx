@@ -125,7 +125,7 @@ const Table = () => {
                 <button onClick={() => setAddModal(true)} className='bg-emerald-500 hover:bg-emerald-600 cursor-pointer p-2 px-4 text-white rounded-lg text-lg sm:text-xl mt-2 sm:mt-0'>+Add</button>
             </div>
             <div className="overflow-x-auto">
-                <table className='w-full min-w-[600px] mt-4'>
+                <table className='w-full min-w-[600px] mt-4 overflow-auto'>
                     <thead className='bg-emerald-400 text-lg sm:text-xl hover:bg-emerald-500 text-white'>
                         <tr>
                             <th className='p-2'>Id</th>
@@ -140,11 +140,11 @@ const Table = () => {
                         {response.map((e: any, i: number) => (
                             <tr className='p-4 border-b border-black text-center' key={i}>
                                 <td className='p-2'>{e.id}</td>
-                                <td className='p-2'>{e.content}</td>
-                                <td className='p-2'>{e.organization.value}</td>
-                                <td className='p-2'>{e.recipient}</td>
-                                <td className='p-2'>{e.sentAt.substring(0, 10)}</td>
-                                <td className='p-2'><button onClick={() => {
+                                <td className='p-2 w-10 overflow-hidden'>{e.content}</td>
+                                <td className='p-2 overflow-scrolll'>{e.organization.value}</td>
+                                <td className='p-2 overflow-scrolll'>{e.recipient}</td>
+                                <td className='p-2 overflow-scrolll'>{e.sentAt.substring(0, 10)}</td>
+                                <td className='p-2 overflow-scrolll'><button onClick={() => {
                                     setChange(true);
                                     setIdx(e.id);
                                     setResip(e.recipient);
