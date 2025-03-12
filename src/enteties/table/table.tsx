@@ -13,7 +13,7 @@ const Table = () => {
     const [recip, setResip] = useState<string>("")
     const [content, setContent] = useState<string>("")
     const [start, setStart] = useState<number>(0)
-    const [finish, setFinish] = useState<number>(8)
+    const [finish, setFinish] = useState<number>(7)
     const [change, setChange] = useState<boolean>(false)
     const [addModal, setAddModal] = useState<boolean>(false)
     const [editModal, setEditModal] = useState<boolean>(false)
@@ -42,7 +42,7 @@ const Table = () => {
                 }
             })
             setData(data.items)
-            setResponse(data.items.slice(0, 8))
+            setResponse(data.items.slice(0, 7))
         } catch (error) {
         }
     }
@@ -105,15 +105,15 @@ const Table = () => {
 
     function nextFunc() {
         if (data.length >= finish) {
-            setStart(start + 8)
-            setFinish(finish + 8)
+            setStart(start + 7)
+            setFinish(finish + 7)
             setResponse(data.slice(start, finish))
         }
     }
     function prevFunc() {
-        if (start >= 8) {
-            setStart(start - 8)
-            setFinish(finish - 8)
+        if (start >= 7) {
+            setStart(start - 7)
+            setFinish(finish - 7)
             setResponse(data.slice(start, finish))
         }
     }
