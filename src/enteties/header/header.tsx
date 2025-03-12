@@ -46,7 +46,7 @@ const Header = () => {
                     <img
                         onClick={() => setModal(true)}
                         className="w-10 h-10 md:w-12 md:h-12 cursor-pointer rounded-full"
-                        src="../../src/assets/A rounded USA flag on a white background, depicted in a distinct split futuristic sci-fi style. Advanced technology, space elements, divided sections, bold areas. .jpg"
+                        src="../../../src/assets/A rounded USA flag on a white background, depicted in a distinct split futuristic sci-fi style. Advanced technology, space elements, divided sections, bold areas. .jpg"
                         alt="EN"
                     />
                 )}
