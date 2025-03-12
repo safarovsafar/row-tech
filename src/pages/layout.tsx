@@ -6,7 +6,7 @@ const Layout = () => {
     
 
     return (
-        <div className="dark:bg-black dark:text-white">
+        <div className="dark:bg-black dark:text-white h-screen overflow-hidden"> 
             <Header />
             <Outlet />
         </div>
