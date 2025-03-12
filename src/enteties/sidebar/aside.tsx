@@ -5,7 +5,7 @@ const Aside = () => {
     const { t } = useTranslation();
     return (
         <div className='flex gap-[100px] font-normal dark:bg-black text-white'>
-            <aside className='hidden lg:block w-[300px] p-4 pt-10 pl-6 h-[89vh] bg-black border'>
+            <aside className='hidden lg:block w-[300px] p-4 pt-10 pl-6 h-[90.5vh] bg-black border'>
                 <div className="flex cursor-pointer gap-4 text-2xl">
                     <img src="../../../src/assets/ooui_view-details-ltr.png" alt="" />
                     <span>{t("text.5")}</span>

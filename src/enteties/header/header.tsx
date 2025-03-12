@@ -18,7 +18,7 @@ const Header = () => {
 
     return (
         <div className="">
-        <div style={{ boxShadow: "0px 0.1px 5px" }} className="w-[100%] flex items-center justify-between px-4 md:px-8 p-4">
+        <div style={{ boxShadow: "0px 0.1px 5px" }} className="w-[100%] flex items-center justify-between px-4 md:px-8 p-2">
             <img src="../../../src/assets/Logo (1) 1 1.png" alt="Logo" className="w-16 md:w-20" />
             <div className="flex gap-4 md:gap-8 items-center">
                 {location.pathname == "/" && (
